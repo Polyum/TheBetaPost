@@ -4,7 +4,7 @@
  * HabboPaper CMS - ALPHA/BETA Version 1.0.0
  *
  *
- *  Créé et codé par Yosemite
+ *  CrÃ©Ã© et codÃ© par Yosemite
  *
  */
 
@@ -15,7 +15,7 @@ date_default_timezone_set('UTC');
 try{
 	$param = array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8");
 	//$bdd = new PDO("mysql:host=127.0.0.1;dbname=habbopaper", "root", "", $param);
-  $bdd = new PDO("mysql:host=sql31.free-h.org:3306;dbname=ft19661-freeh_tbp", "thebpwebhb", "9Ulx2@6w", $param);
+  $bdd = new PDO("mysql:host=127.0.0.1;dbname=dbname", "user", "password", $param);
     $bdd->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 } catch(Exception $e){
 	echo $e->getMessage();
@@ -48,7 +48,7 @@ class Date {
 	function transform($datetime) {
 	    $now = time();
 	    $created = strtotime($datetime);
-	    // La différence est en seconde
+	    // La diffÃ©rence est en seconde
 	    $diff = $now-$created;
 	    $m = ($diff)/(60); // on obtient des minutes
 	    $h = ($diff)/(60*60); // ici des heures
@@ -89,7 +89,7 @@ class Date {
 	        return $dateFormated;
 	    }
 	    else { // on affiche la date normalement
-	        return strftime("%d %B %Y à %H:%M", $created);
+	        return strftime("%d %B %Y Ã  %H:%M", $created);
 	    }
 	}
 }
@@ -98,7 +98,7 @@ $date = new Date();
 
 class Settings {
   function isInstall() {
-    // Variable pour verifier si le cms est bien installé
+    // Variable pour verifier si le cms est bien installÃ©
     global $bdd;
     $check_install = $bdd->query('SELECT * FROM settings WHERE id = 1');
     $check_install_result = $check_install->fetch(PDO::FETCH_OBJ);
@@ -112,7 +112,7 @@ class Settings {
     }
   }
   function getSetting($what) {
-    // On recupère les informations de la DB settings
+    // On recupÃ¨re les informations de la DB settings
     global $bdd;
     $get_settings = $bdd->query('SELECT * FROM settings WHERE id = 1');
     $settings = $get_settings->fetch(PDO::FETCH_OBJ);
@@ -144,7 +144,7 @@ class Theme {
     global $bdd;
     global $settings;
     $current_theme_id = $settings->getSetting("theme");
-    // On selectionne tout dans THEMES ou l'id est égale à l'idée du thème courant
+    // On selectionne tout dans THEMES ou l'id est Ã©gale Ã  l'idÃ©e du thÃ¨me courant
     $get_theme_info = $bdd->query('SELECT * FROM themes WHERE id = '.$current_theme_id);
     $get_theme_info = $get_theme_info->fetch(PDO::FETCH_OBJ);
     //$get_theme_info = $get_theme_info->$what;
@@ -152,7 +152,7 @@ class Theme {
   }
 	function selectTheme($what) {
 		global $bdd;
-    // Selectionner une autre thème
+    // Selectionner une autre thÃ¨me
     $select_theme_action = $bdd->prepare('UPDATE settings SET theme = ? WHERE id = 1');
 		$select_theme_action->execute(array($what));
 	}
@@ -160,7 +160,7 @@ class Theme {
 	function has($what) {
 		global $bdd;
 		global $settings;
-    // On regarde si le thème à ...
+    // On regarde si le thÃ¨me Ã  ...
     $check_has_action = $bdd->prepare('SELECT * FROM themes WHERE id = '.$settings->getSetting("theme"));
 		$check_has_action->execute(array($what));
 		$has_action = $check_has_action->fetch(PDO::FETCH_OBJ);
@@ -191,7 +191,7 @@ class Theme {
 
 $theme = new Theme();
 
-//On défini la fonction alert()
+//On dÃ©fini la fonction alert()
 function alert($type,$message) {
   if ($type == "error") {
     $_SESSION['error_alert'] = $message;
@@ -203,7 +203,7 @@ function alert($type,$message) {
 
 class User {
   function getThing($what) {
-    // On recupère les info de la table MEMBERS
+    // On recupÃ¨re les info de la table MEMBERS
     global $bdd;
   	if(isset($_SESSION["id"])){
   		$get_member_info = $bdd->prepare('SELECT * FROM members WHERE id = :id LIMIT 1');
@@ -242,7 +242,7 @@ class User {
 	}
 
 	function getThingBy($what,$where,$condition) {
-    // On recupère les info de la table MEMBERS
+    // On recupÃ¨re les info de la table MEMBERS
     global $bdd;
   		$get_member_info = $bdd->prepare('SELECT * FROM members WHERE '.$where.' = :condition LIMIT 1');
   		$get_member_info->bindValue("condition", $condition, PDO::PARAM_STR);
@@ -286,7 +286,7 @@ class User {
 	}
   
   function existUser($who,$condition) {
-    // Verifie si un utilisateur existe grâce à son $condition et le $who qu'on possède
+    // Verifie si un utilisateur existe grÃ¢ce Ã  son $condition et le $who qu'on possÃ¨de
     global $bdd;
     $check_exist_member = $bdd->prepare('SELECT * FROM members WHERE '.$condition.' = ?');
 		$check_exist_member->execute(array($who));
@@ -306,7 +306,7 @@ class User {
 		} elseif($user_rank == 2) {
 			return "Journaliste";
 		} elseif ($user_rank == 4) {
-			return "Modérateur";
+			return "ModÃ©rateur";
 		} elseif ($user_rank == 10) {
 			return "Adnministrateur";
 		} else {
@@ -316,7 +316,7 @@ class User {
 	}
 
 	function count() {
-    // Verifie si un utilisateur existe grâce à son $condition et le $who qu'on possède
+    // Verifie si un utilisateur existe grÃ¢ce Ã  son $condition et le $who qu'on possÃ¨de
     global $bdd;
     $check_count_member = $bdd->query('SELECT * FROM members');
     $count_member = $check_count_member->rowCount();
@@ -370,7 +370,7 @@ function setIP ($connected_user_id) {
 }
 
 class Anchor {
-	// On recupère les informations de la page correspondant à l'Anchor
+	// On recupÃ¨re les informations de la page correspondant Ã  l'Anchor
 	function getPageByAnchor($page_id,$what) {
 		global $bdd;
 		$get_page_anchor = $bdd->prepare('SELECT * FROM pages WHERE id = ?');
@@ -453,7 +453,7 @@ class Widget {
 
 	function getWidget($widget_id,$what) {
 		global $bdd;
-    // On selectionne tout dans WIDGETS ou l'id est égale à l'id
+    // On selectionne tout dans WIDGETS ou l'id est Ã©gale Ã  l'id
     $get_widget_info = $bdd->query('SELECT * FROM widgets WHERE id = '.$widget_id);
     $get_widget_info = $get_widget_info->fetch(PDO::FETCH_OBJ);
     //$get_theme_info = $get_theme_info->$what;
@@ -480,7 +480,7 @@ class Article {
 
 	function checkExist($article_id) {
 		global $bdd;
-		// On vérifie si l'article existe
+		// On vÃ©rifie si l'article existe
 		$check_article_exist = $bdd->prepare('SELECT * FROM articles WHERE id = ?');
                 $check_article_exist->execute(array($article_id));
 		if ($check_article_exist->rowCount() > 0) {
